@@ -1,0 +1,9 @@
+Backend:
+	- Auth
+	+ Get others profile 
+	+ Create Group
+	+ Post to a group
+	+ Show only related posts(me and connected clubs)
+	+ Connect to a club
+	+ See My Connections
+	
