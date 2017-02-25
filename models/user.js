@@ -10,20 +10,20 @@ const UserSchema = Schema({
   username: { type: String,required: true},
   password: { type: String,required: true},
   postcount: { type: Number}, 
-  // posts : [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+  posts : [{ type: Schema.Types.ObjectId, ref: 'Post' }]
 });
 
-// // Post Schema
-// const PostSchema = Schema({
-//   creatorId : { type: String, ref: 'User' },
-//   title    : { type: String, required: true},
-//   eventDate: { type: String},
-//   venue: { type: String, required: true},
-//   rules: { type: String,required: true}
-// });
+//Post Schema
+const PostSchema = Schema({
+  creatorId : { type: String, ref: 'User' },
+  title    : { type: String, required: true},
+  eventDate: { type: String},
+  venue: { type: String, required: true},
+  rules: { type: String,required: true}
+});
 
 const User = module.exports = mongoose.model('User', UserSchema);
-// const Post = module.exports = mongoose.model('Post', PostSchema);
+const Post = module.exports = mongoose.model('Post', PostSchema);
 
 
 /* --- All access and entry logic goes here --- */
@@ -60,15 +60,15 @@ module.exports.comparePassword = function(candidatePassword,hash,callback){
 
 // Access Post collection
 
-// module.exports.addPost = function(newPost, callback){
+module.exports.addPost = function(newPost, callback){
 
-//   newPost.save(callback);
-// }
+  newPost.save(callback);
+}
 
-// module.exports.getAllPosts = function(id,callback){
+module.exports.getAllPosts = function(id,callback){
 
-//   Post.find({ venue: 'Eden' }).exec(callback);
-// }
+  Post.find({ venue: 'Eden' }).exec(callback);
+}
 
 
 

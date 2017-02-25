@@ -3,8 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-// const Test = require('../models/user');
-// const Post = require('../models/user');
+const Post = require('../models/user');
 const config = require('../config/database');
 
 // Register
@@ -63,73 +62,73 @@ router.post('/authenticate', function(req, res, next){
 });
 
 // Get own Profile
-// router.get('/profile',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
-//   res.json({user: req.user});
-// });
+router.get('/profile',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
+  res.json({user: req.user});
+});
 
-// // Get others profile
-// router.get('/profile/:userid',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
-//   var userid = req.params.userid;
-//   console.log(req.params.userid);
-//   User.getUserById(userid,function(err,user){
+// Get others profile
+router.get('/profile/:userid',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
+  var userid = req.params.userid;
+  console.log(req.params.userid);
+  User.getUserById(userid,function(err,user){
 
-//     if(err){
-//       throw err;
-//     }
-//     if(!user){
-//       res.json({success: false, msg: 'User not found'});
-//     }
+    if(err){
+      throw err;
+    }
+    if(!user){
+      res.json({success: false, msg: 'User not found'});
+    }
 
-//     res.json({
-//       user: {
-//         id: user._id,
-//         name: user.name,
-//         username: user.username,
-//         email: user.email,
-//         postcount: user.postcount,
-//         posts: posts
-//       }
-//     });
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        postcount: user.postcount,
+        posts: posts
+      }
+    });
     
-//   });
-// });
+  });
+});
 
-// // Add a Post corresponding to a user
-// router.post('/feed',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
-//   var newPost = new Post({
+// Add a Post corresponding to a user
+router.post('/feed',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
+  var newPost = new Post({
 
-//     creatorId: req.user._id,
-//     title: req.body.title,
-//     eventDate: req.body.eventDate,
-//     venue: req.body.venue,
-//     rules: req.body.rules
-//   });
+    creatorId: req.user._id,
+    title: req.body.title,
+    eventDate: req.body.eventDate,
+    venue: req.body.venue,
+    rules: req.body.rules
+  });
 
-//   Post.addPost(newPost, function(err,post){
-//     if(err){
-//       res.json({success: false, msg:'Failed to add post'});
-//     } else {
-//       res.json({success: true, msg:'Post added to database'});
-//     }
-//   });
-// });
+  Post.addPost(newPost, function(err,post){
+    if(err){
+      res.json({success: false, msg:'Failed to add post'});
+    } else {
+      res.json({success: true, msg:'Post added to database'});
+    }
+  });
+});
 
-// // Get all posts
-// router.get('/feed',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
+// Get all posts
+router.get('/feed',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
   
-//   posts = [];
+  posts = [];
 
-//   Post.getAllPosts(req.user._id,function(err,posts){
-//     if(err){
-//       res.json({success: false, msg:'Failed to get post'});
-//     } else {
-//       res.json({
-//         posts: posts,
-//         username: req.user.name 
-//       });
-//     }
-//   });
-// });
+  Post.getAllPosts(req.user._id,function(err,posts){
+    if(err){
+      res.json({success: false, msg:'Failed to get post'});
+    } else {
+      res.json({
+        posts: posts,
+        username: req.user.name 
+      });
+    }
+  });
+});
 
 
 module.exports = router;
