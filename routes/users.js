@@ -3,19 +3,18 @@ const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const Post = require('../models/user');
+const Post = require('../models/post');
 const config = require('../config/database');
 
 // Register
 router.post('/register', (req, res, next) => {
-  let newUser = new User({
+  var newUser = new User({
     name: req.body.name,
     email: req.body.email,
     username: req.body.username,
-    password: req.body.password
+    password: req.body.password,
   });
-
-  User.addUser(newUser, (err, user) => {
+  User.addingUser(newUser, (err, user) => {
     if(err){
       res.json({success: false, msg:'Failed to register user'});
     } else {
@@ -61,15 +60,14 @@ router.post('/authenticate', function(req, res, next){
   });
 });
 
-// Get own Profile
+// Get current user Profile
 router.get('/profile',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
   res.json({user: req.user});
 });
 
-// Get others profile
+// Get profile by userId
 router.get('/profile/:userid',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
   var userid = req.params.userid;
-  console.log(req.params.userid);
   User.getUserById(userid,function(err,user){
 
     if(err){
@@ -130,5 +128,17 @@ router.get('/feed',passport.authenticate('jwt', {session: false}) ,function(req,
   });
 });
 
+router.get('/feed/nearclub',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
+
+  nearclub = [];
+
+  User.getnearClub(req.user.location,function(err,nearclub){
+      if(err){
+        res.json({success: false, msg:'Failed to get nearclub'});
+      } else{
+        res.json(nearclub);
+      }
+    });
+});
 
 module.exports = router;
