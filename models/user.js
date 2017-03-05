@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const config = require('../config/database');
-const Post = require('./post');
 const Schema = mongoose.Schema;
+
+mongoose.Promise = global.Promise;
 
 // User Schema
 const UserSchema = Schema({
@@ -10,7 +11,7 @@ const UserSchema = Schema({
   email: { type: String,required: true},
   username: { type: String,required: true},
   password: { type: String,required: true},
-  location: {type: String},
+  yourlocation: {type: String},
   postcount: { type: Number}, 
   posts : [{ type: Schema.Types.ObjectId, ref: 'Post' }]
 });
@@ -52,7 +53,7 @@ module.exports.comparePassword = function(candidatePassword,hash,callback){
 	});
 }
 
-
-
-
+module.exports.getnearClub = function(location,callback){
+  User.find({yourlocation: location}).exec(callback);
+}
 

@@ -11,6 +11,7 @@ router.post('/register', (req, res, next) => {
   var newUser = new User({
     name: req.body.name,
     email: req.body.email,
+    yourlocation: req.body.yourlocation,
     username: req.body.username,
     password: req.body.password,
   });
@@ -87,7 +88,7 @@ router.get('/profile/:userid',passport.authenticate('jwt', {session: false}) ,fu
         posts: posts
       }
     });
-    
+
   });
 });
 
@@ -111,28 +112,29 @@ router.post('/feed',passport.authenticate('jwt', {session: false}) ,function(req
   });
 });
 
-// Get all posts
+// Get the feed 
 router.get('/feed',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
-  
+
   posts = [];
 
-  Post.getAllPosts(req.user._id,function(err,posts){
+  Post.getFeed(req.user._id,function(err,posts){
     if(err){
       res.json({success: false, msg:'Failed to get post'});
     } else {
       res.json({
         posts: posts,
-        username: req.user.name 
+        username: req.user.name
       });
     }
   });
 });
 
+// Get near club by location 
 router.get('/feed/nearclub',passport.authenticate('jwt', {session: false}) ,function(req, res, next){
 
   nearclub = [];
 
-  User.getnearClub(req.user.location,function(err,nearclub){
+  User.getnearClub(req.user.yourlocation,function(err,nearclub){
       if(err){
         res.json({success: false, msg:'Failed to get nearclub'});
       } else{
